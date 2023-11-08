@@ -1,0 +1,252 @@
++ true '--------------- Regular mono request and response for reference: ---------------------'
++ curl -v --no-buffer --header Accept:text/event-stream http://localhost:8080/api/hello-mono
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying ::1:8080...
+* Connected to localhost (::1) port 8080 (#0)
+> GET /api/hello-mono HTTP/1.1
+
+> Host: localhost:8080
+
+> User-Agent: curl/7.74.0
+
+> Accept:text/event-stream
+
+> 
+
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 OK
+
+< transfer-encoding: chunked
+
+< Content-Type: text/event-stream;charset=UTF-8
+
+< 
+
+{ [73 bytes data]
+data:{"content":"hello 2023-11-08T07:44:28.842930393Z"}
+
+
+100    57    0    57    0     0    228      0 --:--:-- --:--:-- --:--:--   227
+100    57    0    57    0     0    223      0 --:--:-- --:--:-- --:--:--   222
+* Connection #0 to host localhost left intact
++ true '--------------- Regular flux request and response for reference: ---------------------'
++ curl -v --no-buffer --header Accept:text/event-stream http://localhost:8080/api/hello-flux
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying ::1:8080...
+* Connected to localhost (::1) port 8080 (#0)
+> GET /api/hello-flux HTTP/1.1
+
+> Host: localhost:8080
+
+> User-Agent: curl/7.74.0
+
+> Accept:text/event-stream
+
+> 
+
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 OK
+
+< transfer-encoding: chunked
+
+< Content-Type: text/event-stream;charset=UTF-8
+
+< 
+
+{ [73 bytes data]
+data:{"content":"hello 2023-11-08T07:44:28.970424532Z"}
+
+data:{"content":"hello 2023-11-08T07:44:29.972641384Z"}
+
+
+100   114    0   114    0     0    111      0 --:--:--  0:00:01 --:--:--   111
+100   114    0   114    0     0     56      0 --:--:--  0:00:02 --:--:--    56data:{"content":"hello 2023-11-08T07:44:30.975942041Z"}
+
+
+100   171    0   171    0     0     56      0 --:--:--  0:00:03 --:--:--    56data:{"content":"hello 2023-11-08T07:44:31.977513429Z"}
+
+
+100   228    0   228    0     0     56      0 --:--:--  0:00:04 --:--:--    56data:{"content":"hello 2023-11-08T07:44:32.978703976Z"}
+
+
+100   285    0   285    0     0     56      0 --:--:--  0:00:05 --:--:--    56
+100   285    0   285    0     0     56      0 --:--:--  0:00:05 --:--:--    42
+* Connection #0 to host localhost left intact
++ true '--------------- Mono with exception during request, message show: ---------------------'
++ curl -v --no-buffer --header Accept:text/event-stream http://localhost:8080/api/fail/hello-mono
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying ::1:8080...
+* Connected to localhost (::1) port 8080 (#0)
+> GET /api/fail/hello-mono HTTP/1.1
+
+> Host: localhost:8080
+
+> User-Agent: curl/7.74.0
+
+> Accept:text/event-stream
+
+> 
+
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 500 Internal Server Error
+
+< Content-Type: application/json
+
+< Content-Length: 250
+
+< 
+
+{ [250 bytes data]
+{"timestamp":"2023-11-08T07:44:34.023+00:00","path":"/api/fail/hello-mono","status":500,"error":"Internal Server Error","message":"Wifi cable not found 2023-11-08T07:44:33.998163852Z","requestId":"b7a78785-3","exception":"java.lang.RuntimeException"}
+100   250  100   250    0     0   2525      0 --:--:-- --:--:-- --:--:--  2525
+* Connection #0 to host localhost left intact
++ true '--------------- Flux with exception during request, message shown: ---------------------'
++ curl -v --no-buffer --header Accept:text/event-stream http://localhost:8080/api/fail/hello-flux
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying ::1:8080...
+* Connected to localhost (::1) port 8080 (#0)
+> GET /api/fail/hello-flux HTTP/1.1
+
+> Host: localhost:8080
+
+> User-Agent: curl/7.74.0
+
+> Accept:text/event-stream
+
+> 
+
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 500 Internal Server Error
+
+< Content-Type: application/json
+
+< Content-Length: 250
+
+< 
+
+{ [250 bytes data]
+{"timestamp":"2023-11-08T07:44:34.106+00:00","path":"/api/fail/hello-flux","status":500,"error":"Internal Server Error","message":"Wifi cable not found 2023-11-08T07:44:34.105996410Z","requestId":"648d5a50-4","exception":"java.lang.RuntimeException"}
+100   250  100   250    0     0  20833      0 --:--:-- --:--:-- --:--:-- 20833
+* Connection #0 to host localhost left intact
++ true '--------------- Flux with exception after initial request but during flux lifetime, no message shown: ---------------------'
++ curl -v --no-buffer --header Accept:text/event-stream http://localhost:8080/api/fail/hello-flux-later
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying ::1:8080...
+* Connected to localhost (::1) port 8080 (#0)
+> GET /api/fail/hello-flux-later HTTP/1.1
+
+> Host: localhost:8080
+
+> User-Agent: curl/7.74.0
+
+> Accept:text/event-stream
+
+> 
+
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 OK
+
+< transfer-encoding: chunked
+
+< Content-Type: text/event-stream;charset=UTF-8
+
+< 
+
+{ [73 bytes data]
+data:{"content":"hello 2023-11-08T07:44:34.130983708Z"}
+
+data:{"content":"hello 2023-11-08T07:44:35.131942277Z"}
+
+
+100   114    0   114    0     0    112      0 --:--:--  0:00:01 --:--:--   112data:{"content":"hello 2023-11-08T07:44:36.135402949Z"}
+
+
+100   171    0   171    0     0     84      0 --:--:--  0:00:02 --:--:--    84
+100   171    0   171    0     0     56      0 --:--:--  0:00:03 --:--:--    56* transfer closed with outstanding read data remaining
+
+100   171    0   171    0     0     56      0 --:--:--  0:00:03 --:--:--    56
+* Closing connection 0
+curl: (18) transfer closed with outstanding read data remaining
++ true '--------------- Flux of a sink with exception after initial request but during flux lifetime, no message shown: ---------------------'
++ SINK_ID=15145
++ curl -v --no-buffer --header Accept:text/event-stream 'http://localhost:8080/api/fail/hello-flux-sink?id=15145'
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying ::1:8080...
+* Connected to localhost (::1) port 8080 (#0)
+> GET /api/fail/hello-flux-sink?id=15145 HTTP/1.1
+
+> Host: localhost:8080
+
+> User-Agent: curl/7.74.0
+
+> Accept:text/event-stream
+
+> 
+
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 OK
+
+< transfer-encoding: chunked
+
+< Content-Type: text/event-stream;charset=UTF-8
+
+< 
+
+{ [73 bytes data]
+data:{"content":"hello 2023-11-08T07:44:37.173763012Z"}
+
+data:{"content":"hello 2023-11-08T07:44:38.175400421Z"}
+
+
+100   114    0   114    0     0    110      0 --:--:--  0:00:01 --:--:--   110data:{"content":"hello 2023-11-08T07:44:39.177035434Z"}
+
+
+100   171    0   171    0     0     84      0 --:--:--  0:00:02 --:--:--    84
+100   171    0   171    0     0     56      0 --:--:--  0:00:03 --:--:--    56* transfer closed with outstanding read data remaining
+
+100   171    0   171    0     0     56      0 --:--:--  0:00:03 --:--:--    56
+* Closing connection 0
+curl: (18) transfer closed with outstanding read data remaining
++ true '--------------- Flux subscribe request of a the same sink with exception, message shown: ---------------------'
++ curl -v --no-buffer --header Accept:text/event-stream 'http://localhost:8080/api/fail/hello-flux-sink?id=15145'
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying ::1:8080...
+* Connected to localhost (::1) port 8080 (#0)
+> GET /api/fail/hello-flux-sink?id=15145 HTTP/1.1
+
+> Host: localhost:8080
+
+> User-Agent: curl/7.74.0
+
+> Accept:text/event-stream
+
+> 
+
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 500 Internal Server Error
+
+< Content-Type: application/json
+
+< Content-Length: 255
+
+< 
+
+{ [255 bytes data]
+{"timestamp":"2023-11-08T07:44:40.198+00:00","path":"/api/fail/hello-flux-sink","status":500,"error":"Internal Server Error","message":"Wifi cable not found 2023-11-08T07:44:40.178207391Z","requestId":"28db6df2-7","exception":"java.lang.RuntimeException"}
+100   255  100   255    0     0  19615      0 --:--:-- --:--:-- --:--:-- 19615
+* Connection #0 to host localhost left intact
++ true done

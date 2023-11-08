@@ -1,0 +1,11 @@
+debug: true
+logging:
+    level:
+        root: debug
+spring:
+  main:
+    banner-mode: off
+server:
+    error:
+        include-exception: true
+        include-message: always
